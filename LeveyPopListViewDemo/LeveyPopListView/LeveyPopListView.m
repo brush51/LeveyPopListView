@@ -26,7 +26,31 @@
 
 #pragma mark - initialization & cleaning up
 - (id)initWithTitle:(NSString *)aTitle options:(NSArray *)aOptions {
-    CGRect rect = [[UIScreen mainScreen] applicationFrame];
+    //correct the old CGRect to make the View flexible for both orientations
+    //CGRect rect = [[UIScreen mainScreen] applicationFrame];
+    
+    /**
+     * Get the screen bounds and draw the correct rect 
+     * for the current orientation view
+     * 
+     */
+     
+    CGRect screenBounds = [UIScreen mainScreen].bounds ;
+    CGFloat width = CGRectGetWidth(screenBounds)  ;
+    CGFloat height = CGRectGetHeight(screenBounds) ;
+    UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+	
+    if(UIInterfaceOrientationIsPortrait(interfaceOrientation)){
+        screenBounds.size = CGSizeMake(width, height);
+    }else if(UIInterfaceOrientationIsLandscape(interfaceOrientation)){
+        screenBounds.size = CGSizeMake(height, width);
+    }
+	
+	
+    CGRect rect = screenBounds;
+
+	
+    
     if (self = [super initWithFrame:rect]) {
         self.backgroundColor = [UIColor clearColor];
         _title = [aTitle copy];
